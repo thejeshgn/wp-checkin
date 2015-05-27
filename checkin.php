@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: CheckIn
-Plugin URI: http://github.com/thejeshgn/checkin
+Plugin URI: http://github.com/thejeshgn/wp-checkin
 Description: Displays post geotag information using mapsmaker. Also cheaters a marker and adds it to a layer.
 Version: 0.1.1
 Author: Thejesh GN
