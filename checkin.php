@@ -113,7 +113,7 @@ function checkin_save_postdata($post_id) {
 		return $post_id;
   }
   
-
+  $post = get_post($post_id);
   $latitude = clean_coordinate($_POST['checkin-latitude']);
   $longitude = clean_coordinate($_POST['checkin-longitude']);
   $marker_id = get_post_meta($post_id, 'checkin_marker_id', true);
@@ -124,13 +124,14 @@ function checkin_save_postdata($post_id) {
   $api_key = get_option('checkin_api_key');
   $expires = strtotime("+60 mins");
   $sign_key = calculate_signature($expires);
-  $markername = 'Checked In just now';
+  $markername = $post->post_title; 
   $layer = get_option('checkin_layer_id');
   $zoom = get_option('checkin_default_zoom');
   $height = get_option('checkin_map_height');
   $width = get_option('checkin_map_width');
   $blog_url = get_bloginfo('url');
   $popuptext = '<a href="'.$blog_url.'?p='.$post_id.'">'.$post->post_title.'</a>';
+  
 	
   if((clean_coordinate($latitude) != '') && (clean_coordinate($longitude)) != '') {
   	update_post_meta($post_id, 'geo_latitude', $latitude);
@@ -151,7 +152,7 @@ function checkin_save_postdata($post_id) {
   		update_post_meta($post_id, 'geo_enabled', 0);
   		update_post_meta($post_id, 'geo_public', 1);
   	}
-	if($marker_id == '0' || $marker_id == '' || $marker_id == 0){
+	if($marker_id == '0' || $marker_id == '' || $marker_id == 0 || $marker_id == 1 || $marker_id == '1'){
 		//create the marker
 		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'add','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','popuptext'=>$popuptext);
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
