@@ -115,10 +115,10 @@ function checkin_save_postdata($post_id) {
   
 																																		
   $post = get_post($post_id);
-  $post_id = $post->ID;
   $latitude = clean_coordinate($_POST['checkin-latitude']);
   $longitude = clean_coordinate($_POST['checkin-longitude']);
-  $marker_id = get_post_meta($post_id, 'checkin_marker_id', true);
+  $marker_id = $_POST['checkin_marker_id'];
+  //$marker_id = get_post_meta($post_id, 'checkin_marker_id', true);
   $address = reverse_geocode($latitude, $longitude);
   $public = $_POST['checkin-public'];
   $on = $_POST['checkin-on'];
@@ -154,7 +154,12 @@ function checkin_save_postdata($post_id) {
   		update_post_meta($post_id, 'geo_enabled', 0);
   		update_post_meta($post_id, 'geo_public', 1);
   	}
-	if($marker_id == '0' || $marker_id == '' || $marker_id == 0 || $marker_id == 1 || $marker_id == '1'){
+
+	if(!empty($marker_id)){
+		update_post_meta($post_id, 'checkin_marker_id', $marker_id);
+	}
+	
+	if(empty($marker_id)){
 		//create the marker
 		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'add','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','popuptext'=>$popuptext);
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
