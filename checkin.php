@@ -155,11 +155,8 @@ function checkin_save_postdata($post_id) {
   		update_post_meta($post_id, 'geo_public', 1);
   	}
 
-	if(!empty($marker_id)){
-		update_post_meta($post_id, 'checkin_marker_id', $marker_id);
-	}
 	
-	if(empty($marker_id)){
+	if( empty($marker_id) || $marker_id == '0' || $marker_id == '' || $marker_id == 0 ){
 		//create the marker
 		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'add','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','popuptext'=>$popuptext);
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
@@ -174,6 +171,7 @@ function checkin_save_postdata($post_id) {
 		//update the marker
 		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'update','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','id'=>intval($marker_id));
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
+		update_post_meta($post_id, 'checkin_marker_id', $marker_id);
 	}
 	
 	
