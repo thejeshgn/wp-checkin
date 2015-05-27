@@ -100,10 +100,14 @@ function checkin_save_postdata($post_id) {
   // Check authorization, permissions, autosave, etc
   //This wont happen from wordpress and hence removing it
   if (!wp_verify_nonce($_POST['checkin_nonce'], plugin_basename(__FILE__)))
-	return $post_id;
+		return $post_id;
   
-  if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-    return $post_id;
+  if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE){
+		return $post_id;
+  }
+   if(wp_is_post_revision($post_id)){
+		return $post_id;
+	}
   
   if('page' == $_POST['post_type'] ) {
     if(!current_user_can('edit_page', $post_id))
@@ -117,7 +121,7 @@ function checkin_save_postdata($post_id) {
   $post = get_post($post_id);
   $latitude = clean_coordinate($_POST['checkin-latitude']);
   $longitude = clean_coordinate($_POST['checkin-longitude']);
-  $marker_id = $_POST['checkin_marker_id'];
+  $marker_id = $_POST['checkin-marker-id'];
   //$marker_id = get_post_meta($post_id, 'checkin_marker_id', true);
   $address = reverse_geocode($latitude, $longitude);
   $public = $_POST['checkin-public'];
@@ -185,6 +189,14 @@ function checkin_save_postdata($post_id) {
 //This will work from the web page update
 function checkin_save_mobile($post_id) {
   
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE){
+		return $post_id;
+	}
+	
+   if(wp_is_post_revision($post_id)){
+		return $post_id;
+	}
+
 	$post = get_post($post_id);
 	$latitude = clean_coordinate(get_post_meta($post_id, 'geo_latitude', true));
 	$longitude = clean_coordinate(get_post_meta($post_id, 'geo_longitude', true));
