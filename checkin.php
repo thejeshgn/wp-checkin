@@ -113,7 +113,9 @@ function checkin_save_postdata($post_id) {
 		return $post_id;
   }
   
+																																		
   $post = get_post($post_id);
+  $post_id = $post->ID;
   $latitude = clean_coordinate($_POST['checkin-latitude']);
   $longitude = clean_coordinate($_POST['checkin-longitude']);
   $marker_id = get_post_meta($post_id, 'checkin_marker_id', true);
