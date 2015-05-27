@@ -162,7 +162,7 @@ function checkin_save_postdata($post_id) {
 	
 	if( empty($marker_id) || $marker_id == '0' || $marker_id == '' || $marker_id == 0 ){
 		//create the marker
-		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'add','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','popuptext'=>$popuptext);
+		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'icon'=>'footprint.png', 'action'=>'add','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','popuptext'=>$popuptext);
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
 		//var_dump($api_endpoint);
 		//var_dump($response_data);
@@ -173,7 +173,7 @@ function checkin_save_postdata($post_id) {
 	}else
 	{
 		//update the marker
-		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'update','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','id'=>intval($marker_id));
+		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'icon'=>'footprint.png','action'=>'update','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','id'=>intval($marker_id));
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
 		update_post_meta($post_id, 'checkin_marker_id', $marker_id);
 	}
@@ -226,7 +226,7 @@ function checkin_save_mobile($post_id) {
   
 	if($latitude != '' && $longitude != '' && (!empty($latitude)) && (!empty($longitude)) && ( $marker_id == '0' || $marker_id == '' || $marker_id == 0)){
 
-		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'add','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','popuptext'=>$popuptext);
+		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'icon'=>'footprint.png', 'action'=>'add','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','popuptext'=>$popuptext);
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
 		$json_data = jsonp_decode($response_data['body']);
 		if($json_data->{'success'}){
@@ -234,8 +234,9 @@ function checkin_save_mobile($post_id) {
 		}
 	}else{
 		//update the marker
-		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'update','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','id'=>intval($marker_id));
+		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'icon'=>'footprint.png', 'action'=>'update','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','id'=>intval($marker_id));
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
+		update_post_meta($post_id, 'checkin_marker_id', $marker_id);
 	}  
   return $post_id;
 }
