@@ -234,7 +234,7 @@ function checkin_save_mobile($post_id) {
 		}
 	}else{
 		//update the marker
-		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'icon'=>'footprint.png', 'action'=>'update','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'layer'=>$layer,'zoom'=>$zoom,'mapwidth'=>$width,'mapheight'=>$height,'mapwidthunit'=>'%','id'=>intval($marker_id));
+		$body = array( 'key' => $api_key, 'signature' => $sign_key,'expires'=>$expires, 'action'=>'update','type'=>'marker','markername'=>$markername, 'lat'=> $latitude,'lon'=>$longitude,'id'=>intval($marker_id));
 		$response_data = wp_remote_post($api_endpoint, array('method' => 'POST', 'body'=>$body));
 		update_post_meta($post_id, 'checkin_marker_id', $marker_id);
 	}  
